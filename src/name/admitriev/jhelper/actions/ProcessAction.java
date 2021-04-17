@@ -14,28 +14,33 @@ import name.admitriev.jhelper.generation.IncludesProcessor;
  * @author egor@egork.net
  */
 public class ProcessAction extends BaseAction {
-	@Override
-	protected void performAction(AnActionEvent e) {
-		Project project = e.getProject();
-		if (project == null) {
-			throw new NotificationException("No project found", "Are you in any project?");
-		}
-		FileEditorManager manager = FileEditorManager.getInstance(project);
-		if (manager == null) {
-			throw new NotificationException("This is unexpected", "File editor manager is null");
-		}
-		VirtualFile[] files = manager.getSelectedFiles();
-		if (files.length == 0) {
-			throw new NotificationException("No file found", "Do you have opened file?");
-		}
-		PsiFile file = PsiManager.getInstance(project).findFile(files[0]);
-		if (file == null) {
-			throw new NotificationException("This is unexpected", "No associated PsiFile");
-		}
-		if (FileUtils.isNotCppFile(file)) {
-			throw new NotificationException("Not a cpp file", "Only cpp files are currently supported");
-		}
-		String result = IncludesProcessor.process(file);
-		FileUtils.writeToFile(file, result);
-	}
+  @Override
+  protected void performAction(AnActionEvent e) {
+    Project project = e.getProject();
+    if (project == null) {
+      throw new NotificationException("No project found",
+                                      "Are you in any project?");
+    }
+    FileEditorManager manager = FileEditorManager.getInstance(project);
+    if (manager == null) {
+      throw new NotificationException("This is unexpected",
+                                      "File editor manager is null");
+    }
+    VirtualFile[] files = manager.getSelectedFiles();
+    if (files.length == 0) {
+      throw new NotificationException("No file found",
+                                      "Do you have opened file?");
+    }
+    PsiFile file = PsiManager.getInstance(project).findFile(files[0]);
+    if (file == null) {
+      throw new NotificationException("This is unexpected",
+                                      "No associated PsiFile");
+    }
+    if (FileUtils.isNotCppFile(file)) {
+      throw new NotificationException("Not a cpp file",
+                                      "Only cpp files are currently supported");
+    }
+    String result = IncludesProcessor.process(file);
+    FileUtils.writeToFile(file, result);
+  }
 }
